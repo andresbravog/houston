@@ -67,9 +67,7 @@ module Houston
 
       Connection.open(@feedback_uri, @certificate, @passphrase) do |connection|
         while line = connection.read(38)
-          feedback = line.unpack('N1n1H140')
-          timestamp = feedback[0]
-          token = feedback[2].scan(/.{0,8}/).join(' ').strip
+          timestamp, length, token = line.unpack('N1n1H140')
           devices << {token: token, timestamp: timestamp} if token && timestamp
         end
       end
